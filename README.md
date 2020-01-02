@@ -93,7 +93,7 @@ Criar as rotas:
 
 ``http://127.0.0.1:3004/users/1``
 
-Ou baixar o arquivo do ! (__insominia__)
+Ou baixar o arquivo do ! <a href="https://raw.githubusercontent.com/TaffarelXavier/autenticacao-com-sessao-no-adonis/master/Insomnia_2020-01-02.json" target="_blank">Insomnia_2020-01-02.json</a>
 
 
 ## 8º Erros (KKK) : (
