@@ -2,8 +2,7 @@
 
 # 1º Passo:
 > ##  Criar o projeto Adonis
-``adonis new autenticacao-com-sessao``<br>
-Após a criação, execute o comando: ``npm install``
+> ``adonis new autenticacao-com-sessao``<br>
 
 # 2º Passo:
 > ##  Instalar o __Sqlite3__
