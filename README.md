@@ -25,8 +25,9 @@
 
 > ## No novo controller criado (_UserController_) , criaremos três métodos, a saber:
 1. __register__ - Cadastrará algum usuário
-2. __login__    - Para fazer o login do usuário criado
+2. __login__    - Para fazer o login do usuário
 3. __show__     - Mostra o usuário logado
+4. __logout__   - Faz o logout
 ----
 Antes de criarmos esses métodos, importaremos o `model`  `User` no `UserController` (App/Controllers/Http/UserController.js), desta forma: 
 ``` js
@@ -45,11 +46,6 @@ __Criação dos métodos__<br>
 async register({ auth, request, response }) {
     let user = await User.create(request.all());
 
-    //generate token for user;
-    let token = await auth.generate(user);
-
-    Object.assign(user, token);
-
     return response.json(user);
   }
 ```
@@ -59,12 +55,24 @@ async register({ auth, request, response }) {
 ----
 
 ``` javascript
- async login({ auth, request }) {
+ async login({ auth, request, response  }) {
     const { email, password } = request.all();
 
-    let result = await auth.attempt(email, password);
-  
-    return result;
+    try {
+      let result = await auth.attempt(email, password);
+      return result;
+    } catch (error) {
+      let errorUser = error.message.startsWith("E_USER_NOT_FOUND");
+      let errorPass = error.message.startsWith("E_PASSWORD_MISMATCH");
+      let info = { type: "another", message: error.message };
+
+      if (errorUser) {
+        info = { type: "user", message: "E_USER_NOT_FOUND" };
+      } else if(errorPass) {
+        info = { type: "pass", message: "E_PASSWORD_MISMATCH" };
+      }
+      return response.status(403).send(info);
+    }
   }
 ```
 ----
@@ -79,6 +87,20 @@ __5.3 Show__  ``app/Controllers/Http/UserController.js``
     return auth.user;
   }
 ```
+__5.4 Logout__ 
+``` javascript
+ async logout({ request, response, auth }) {
+    try {
+      const isLogeddin = await auth.check();
+      if (isLogeddin) {
+        await auth.logout();
+      }
+      return response.status(401).send({ alert: "DESCONECTADO" });
+    } catch (error) {
+      response.status(401).send({ alert: "NOT_LOGGEDED" });
+    }
+  }
+  ```
 # 6º Passo:
 > ## Criando as rotas
 ``` javascript
@@ -90,6 +112,9 @@ Route.post('/register', 'UserController.register')
 
 //Buscar um usuário pelo ID dele
 Route.get("users/:id", "UserController.show").middleware("auth");
+
+//Faz o logout
+Route.get("/logout", "UserController.logout");
 ```
 
 ## 7º Passo:
