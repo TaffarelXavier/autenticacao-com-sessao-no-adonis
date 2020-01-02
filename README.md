@@ -97,7 +97,7 @@ Ou baixar o arquivo <a href="https://raw.githubusercontent.com/TaffarelXavier/au
 ## 8º Erros (KKK) : (
 
 __1 ERRO__. `EBADCSRFTOKEN`<br>
-Para corrigirmos esse erro, devemos instalar o provedor `sheild`, via npm, executando o seguinte comando:
+Para corrigirmos esse erro, devemos instalar o provedor `sheild`, via npm, executando o seguinte comando:<br><br>
 `adonis install @adonisjs/shield`<br><br>
 Após, ir ao arquivo `config/shield.js` e alterar a opção <br> ``enable: true`` para ``false``.
 Ficando desta forma:
