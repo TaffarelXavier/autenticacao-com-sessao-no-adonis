@@ -20,12 +20,22 @@
 
 # 5º Passo:
 
-> ## Criando os métodos de:
-1. __Registro__
-2. __Login__
-3. __Mostrar Usuário Logado__
+> ## No novo controller criado (_UserController_) , criaremos três métodos, a saber:
+1. __register__ - Cadastrará algum usuário
+2. __login__    - Para fazer o login do usuário criado
+3. __show__     - Mostra o usuário logado
 ----
- __5.1 Registro__    ``app/Controllers/Http/UserController.js``
+Antes de criarmos esses métodos, importaremos o `model`  `User` no `UserController` (App/Controllers/Http/UserController.js), desta forma: 
+``` js
+"use strict";
+
+//Importação:
+const User = use('App/Models/User');
+
+class UserController {}
+```
+__Criação dos métodos__<br>
+ __5.1 Register__    ``app/Controllers/Http/UserController.js``
 ----
 
 ``` javascript
@@ -55,7 +65,7 @@ async register({ auth, request, response }) {
   }
 ```
 ----
-__5.3 Mostrar Usuário Logado__  ``app/Controllers/Http/UserController.js``
+__5.3 Show__  ``app/Controllers/Http/UserController.js``
 ----
 
 ``` javascript
@@ -97,9 +107,7 @@ Ou baixar o arquivo <a href="https://raw.githubusercontent.com/TaffarelXavier/au
 ## 8º Erros (KKK) : (
 
 __1 ERRO__. `EBADCSRFTOKEN`<br>
-Para corrigirmos esse erro, devemos instalar o provedor `sheild`, via npm, executando o seguinte comando:<br><br>
-`adonis install @adonisjs/shield`<br><br>
-Após, ir ao arquivo `config/shield.js` e alterar a opção <br> ``enable: true`` para ``false``.
+Para corrigirmos esse erro, ir ao arquivo `config/shield.js` e alterar a opção <br> ``enable: true`` para ``false``.
 Ficando desta forma:
 ```javascript
  csrf: {
