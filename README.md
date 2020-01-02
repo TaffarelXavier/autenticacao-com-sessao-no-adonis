@@ -7,8 +7,11 @@
 # 2º Passo:
 > ##  Instalar o __Sqlite3__
 > ``npm install sqlite3 --save``<br>
-> ou <br>
-> ``yarn add sqlite3`` <br>
+> _ou_ <br>
+> ``yarn add sqlite3``
+> Seguir este passo: 
+> (https://yarnpkg.com/en/package/sqlite3)
+>  <br>
 
 # 3º Passo:
 > ## Executar as migrações:
