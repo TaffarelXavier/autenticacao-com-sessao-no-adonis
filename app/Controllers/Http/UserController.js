@@ -1,27 +1,39 @@
 "use strict";
 
-const User = use('App/Models/User');
+const User = use("App/Models/User");
 
 class UserController {
-    
-  async register({ auth, request, response }) {
+  /**
+   *
+   * @param {*} param0
+   */
+  async register({ request, response }) {
     let user = await User.create(request.all());
-
-    //generate token for user;
-    //let token = await auth.generate(user);
-
-    Object.assign(user, token);
 
     return response.json(user);
   }
-
-
-  async login({ auth, request }) {
+  /**
+   *
+   * @param {*} param0
+   */
+  async login({ auth, request, response }) {
     const { email, password } = request.all();
 
-    let result = await auth.attempt(email, password);
-  
-    return result;
+    try {
+      let result = await auth.attempt(email, password);
+      return result;
+    } catch (error) {
+      let errorUser = error.message.startsWith("E_USER_NOT_FOUND");
+      let errorPass = error.message.startsWith("E_PASSWORD_MISMATCH");
+      let info = { type: "another", message: error.message };
+
+      if (errorUser) {
+        info = { type: "user", message: "E_USER_NOT_FOUND" };
+      } else if(errorPass) {
+        info = { type: "pass", message: "E_PASSWORD_MISMATCH" };
+      }
+      return response.status(403).send(info);
+    }
   }
 
   async show({ auth, params }) {
@@ -31,6 +43,17 @@ class UserController {
     return auth.user;
   }
 
+  async logout({ request, response, auth }) {
+    try {
+      const isLogeddin = await auth.check();
+      if (isLogeddin) {
+        await auth.logout();
+      }
+      return response.status(401).send({ alert: "DESCONECTADO" });
+    } catch (error) {
+      response.status(401).send({ alert: "NOT_LOGGEDED" });
+    }
+  }
 }
 
 module.exports = UserController;
