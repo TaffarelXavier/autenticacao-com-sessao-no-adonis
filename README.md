@@ -160,3 +160,21 @@ POST /login
 ```
 
 __Esse erro acontece devio à senha incorreta.__
+
+----
+
+__3 Erro:__ `RuntimeException`<br>
+```plaintext
+RuntimeException
+E_RUNTIME_ERROR: Session store is not initiated yet. Make sure that you have included the session middleware inside the list of global middleware. > More details: https://err.sh/adonisjs/errors/E_RUNTIME_ERROR
+```
+__Esse erro é causado porque deve se colocar o Session no ``Global Middleware``__
+Desta forma:
+``` javascript 
+const globalMiddleware = [
+  'Adonis/Middleware/BodyParser',
+  'Adonis/Middleware/Session' /*Aqui*/,
+  'Adonis/Middleware/AuthInit',
+  'App/Middleware/ConvertEmptyStringsToNull'
+]
+```
