@@ -2,7 +2,7 @@
 
 # 1º Passo:
 > ##  Criar o projeto Adonis
-> ``adonis new autenticacao-com-sessao``<br>
+> ``adonis new autenticacao-com-sessao --api-only``<br>
 
 # 2º Passo:
 > ##  Instalar o __Sqlite3__
@@ -18,28 +18,28 @@
 > ``adonis migration:run``
 
 # 4º Passo:
-> ## Criar o __controller User:__ <br>
-``adonis make:controller User --type http``
+> ## Criar o __controller Session:__ <br>
+``adonis make:controller Session --type http``
 
 # 5º Passo:
 
-> ## No novo controller criado (_UserController_) , criaremos três métodos, a saber:
+> ## No novo controller criado (_App/Controllers/Http/SessionController_) , criaremos quatro métodos, a saber:
 1. __register__ - Cadastrará algum usuário
 2. __login__    - Para fazer o login do usuário
 3. __show__     - Mostra o usuário logado
 4. __logout__   - Faz o logout
 ----
-Antes de criarmos esses métodos, importaremos o `model`  `User` no `UserController` (App/Controllers/Http/UserController.js), desta forma: 
+Antes de criarmos esses métodos, importaremos o `model`  `User` no `SessionController` (App/Controllers/Http/SessionController.js), desta forma: 
 ``` js
 "use strict";
 
 //Importação:
 const User = use('App/Models/User');
 
-class UserController {}
+class SessionController {}
 ```
 __Criação dos métodos__<br>
- __5.1 Register__    ``app/Controllers/Http/UserController.js``
+ __5.1 Register__    ``app/Controllers/Http/SessionController.js``
 ----
 
 ``` javascript
@@ -51,7 +51,7 @@ async register({ auth, request, response }) {
 ```
 
 ----
- __5.2 Login__       ``app/Controllers/Http/UserController.js``
+ __5.2 Login__       ``app/Controllers/Http/SessionController.js``
 ----
 
 ``` javascript
@@ -76,7 +76,7 @@ async register({ auth, request, response }) {
   }
 ```
 ----
-__5.3 Show__  ``app/Controllers/Http/UserController.js``
+__5.3 Show__  ``app/Controllers/Http/SessionController.js``
 ----
 
 ``` javascript
@@ -104,17 +104,27 @@ __5.4 Logout__
 # 6º Passo:
 > ## Criando as rotas
 ``` javascript
-//Faz o login
-Route.post("/login", "UserController.login").middleware("guest");
 
-//Cadastrar um novo usuário:
-Route.post('/register', 'UserController.register')
+// Essas rotas devem ser acessíveis apenas //
+quando você não está logado
+Route.group(() => {
+  //Faz o login
+  Route.post("/login", "SessionController.login")
+  //Cadastrar um novo usuário:
+  Route.post('/register', 'SessionController.register')
+}).middleware(['guest'])
 
+
+// Essas rotas devem ser acessíveis apenas
+// quando você está logado
+Route.group(() => {
 //Buscar um usuário pelo ID dele
-Route.get("users/:id", "UserController.show").middleware("auth");
+Route.get("users/:id", "SessionController.show").middleware("auth");
 
 //Faz o logout
-Route.get("/logout", "UserController.logout");
+Route.get("/logout", "SessionController.logout");
+}).middleware(['auth'])
+
 ```
 
 ## 7º Passo:
@@ -158,12 +168,11 @@ E_GUEST_ONLY: Only guest
 user can access the route
 POST /login
 ```
-
 __Esse erro acontece devio à senha incorreta.__
 
 ----
 
-__3 Erro:__ `RuntimeException`<br>
+__3 ERRO:__ `RuntimeException`<br>
 
 RuntimeException
 E_RUNTIME_ERROR: Session store is not initiated yet.<br> Make sure that you have included the session middleware<br> inside the list of global middleware. <br>More details: https://err.sh/adonisjs/errors/E_RUNTIME_ERROR
